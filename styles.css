@@ -1,0 +1,70 @@
+:root {
+  --brand: #0f766e;
+  --brand-dark: #0b5953;
+  --bg: #fff8ec;
+  --text: #1f2937;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.welcome {
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.icon { color: var(--brand); }
+
+h1 {
+  margin: 8px 0 0;
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 1.125rem;
+  color: #4b5563;
+}
+
+.cta {
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--brand);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
+  transition: background 0.15s, transform 0.1s;
+}
+
+.cta:hover { background: var(--brand-dark); }
+.cta:active { transform: scale(0.98); }
+.cta:focus-visible { outline: 3px solid var(--brand-dark); outline-offset: 3px; }
