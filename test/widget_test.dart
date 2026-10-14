@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exploraec/main.dart';
+import 'package:exploraec/theme/theme_controller.dart';
 import 'package:exploraec/widgets/empty_view.dart';
 import 'package:exploraec/widgets/error_view.dart';
 import 'package:exploraec/widgets/loading_view.dart';
@@ -102,5 +103,25 @@ void main() {
     expect(find.text('El nombre es obligatorio'), findsOneWidget);
     expect(find.text('La categoría es obligatoria'), findsOneWidget);
     expect(find.text('Escribe al menos 10 caracteres'), findsOneWidget);
+  });
+
+  testWidgets('El botón de tema alterna automático → claro → oscuro', (WidgetTester tester) async {
+    modoTema.value = ThemeMode.system;
+    addTearDown(() => modoTema.value = ThemeMode.system);
+    await abrirApp(tester);
+
+    Brightness brillo() => Theme.of(tester.element(find.text('Parque El Ejido'))).brightness;
+
+    await tester.tap(find.byIcon(Icons.brightness_auto));
+    await tester.pumpAndSettle();
+    expect(brillo(), Brightness.light);
+
+    await tester.tap(find.byIcon(Icons.light_mode));
+    await tester.pumpAndSettle();
+    expect(brillo(), Brightness.dark);
+
+    await tester.tap(find.byIcon(Icons.dark_mode));
+    await tester.pumpAndSettle();
+    expect(modoTema.value, ThemeMode.system);
   });
 }

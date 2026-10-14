@@ -5,6 +5,7 @@ import '../widgets/loading_view.dart';
 import '../widgets/empty_view.dart';
 import '../widgets/error_view.dart';
 import '../theme/app_theme.dart';
+import '../theme/theme_controller.dart';
 import 'add_place_screen.dart';
 
 /// Pantalla de Inicio: lista de lugares — Sesión 2 (datos de ejemplo).
@@ -44,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('ExploraEC'),
         actions: [
+          const BotonModoTema(),
           PopupMenuButton<String>(
             tooltip: 'Simular estado (solo práctica)',
             onSelected: (valor) {
