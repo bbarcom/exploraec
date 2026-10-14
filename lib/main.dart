@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'bienvenida_claude_design.dart';
 
 void main() {
   runApp(const ExploraEcApp());
