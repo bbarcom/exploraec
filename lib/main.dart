@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
+import 'screens/map_placeholder_screen.dart';
+import 'screens/favorites_placeholder_screen.dart';
 
 void main() {
   runApp(const ExploraEcApp());
@@ -11,69 +14,48 @@ class ExploraEcApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ExploraEC',
-      home: const BienvenidaScreen(),
+      home: const RootShell(),
     );
   }
 }
 
-class BienvenidaScreen extends StatelessWidget {
-  const BienvenidaScreen({super.key});
+/// Contenedor raíz con la barra de navegación inferior — Sesión 2.
+class RootShell extends StatefulWidget {
+  const RootShell({super.key});
+
+  @override
+  State<RootShell> createState() => _RootShellState();
+}
+
+class _RootShellState extends State<RootShell> {
+  int _indiceActual = 0;
 
   @override
   Widget build(BuildContext context) {
-    const brand = Color(0xFF0F766E);
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8EC),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 48, 24, 40),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.explore, size: 96, color: brand),
-                    SizedBox(height: 24),
-                    Text(
-                      'ExploraEC',
-                      style: TextStyle(
-                        fontSize: 44,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.9,
-                        color: Color(0xFF1F2937),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Descubre y guarda lugares cerca de ti',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Color(0xFF4B5563)),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: brand,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: const StadiumBorder(),
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('Empezar'),
-                ),
-              ),
-            ],
-          ),
-        ),
+      // TODO(sesion-02): borra la línea de abajo y descomenta el bloque completo. (cuerpo según pestaña)
+      // Por qué: un body fijo en HomeScreen ignoraría qué pestaña está
+      // activa — este switch sobre _indiceActual es lo que hace que
+      // BottomNavigationBar (más abajo) realmente cambie de contenido
+      // al tocar cada pestaña, en vez de solo resaltarla.
+      body: switch (_indiceActual) {
+        0 => const HomeScreen(),
+        1 => const MapPlaceholderScreen(),
+        _ => const FavoritesPlaceholderScreen(),
+      },
+
+      // TODO(sesion-02): borra la línea de abajo y descomenta el bloque completo. (barra inferior)
+      // Por qué: sin este widget no hay pestañas que tocar — junto con
+      // el switch de arriba, BottomNavigationBar alterna entre
+      // Inicio/Mapa/Favoritos sin apilarlas como haría Navigator.push.
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _indiceActual,
+        onTap: (i) => setState(() => _indiceActual = i),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
+        ],
       ),
     );
   }

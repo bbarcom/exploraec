@@ -1,30 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exploraec/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Inicio muestra lugares y la barra cambia de pestaña', (WidgetTester tester) async {
+    await tester.pumpWidget(const ExploraEcApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // La lista de Inicio muestra los lugares de ejemplo.
+    expect(find.text('Parque El Ejido'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
+    // La barra inferior tiene las 3 secciones.
+    expect(find.text('Inicio'), findsOneWidget);
+    expect(find.text('Mapa'), findsOneWidget);
+    expect(find.text('Favoritos'), findsOneWidget);
+
+    // Tocar "Mapa" cambia el contenido.
+    await tester.tap(find.text('Mapa'));
+    await tester.pump();
+    expect(find.text('Parque El Ejido'), findsNothing);
+  });
+
+  testWidgets('Tocar una tarjeta abre el Detalle', (WidgetTester tester) async {
+    await tester.pumpWidget(const ExploraEcApp());
+
+    await tester.tap(find.text('Parque El Ejido'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BackButton), findsOneWidget);
+  });
+
+  testWidgets('El formulario vacío muestra errores y no se cierra', (WidgetTester tester) async {
+    await tester.pumpWidget(const ExploraEcApp());
+
     await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Guardar'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('El nombre es obligatorio'), findsOneWidget);
+    expect(find.text('La categoría es obligatoria'), findsOneWidget);
+    expect(find.text('Escribe al menos 10 caracteres'), findsOneWidget);
   });
 }
