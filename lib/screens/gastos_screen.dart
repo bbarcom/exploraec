@@ -63,7 +63,12 @@ class GastosScreen extends GetView<GastosController> {
         // escribir nada nuevo. Mientras recarga, el `Obx` de arriba muestra el
         // `LoadingView` de siempre; eso es lo esperado.
         return RefreshIndicator(
-          onRefresh: controller.cargarGastos,
+          onRefresh: () async {
+            await controller.cargarGastos();
+            if (controller.estado.value == EstadoCarga.exito) {
+              Get.snackbar('Lista actualizada', 'Se consultaron tus gastos del viaje');
+            }
+          },
           child: _buildLista(controller.gastos),
         );
       }),
