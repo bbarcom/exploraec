@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../controllers/places_controller.dart';
 import '../models/place.dart';
 import '../theme/app_theme.dart';
-import '../theme/theme_controller.dart';
 import '../widgets/empty_view.dart';
 import '../widgets/error_view.dart';
 import '../widgets/loading_view.dart';
@@ -27,7 +26,6 @@ class HomeScreen extends GetView<PlacesController> {
       appBar: AppBar(
         title: Obx(() => Text('ExploraEC (${controller.total})')),
         actions: [
-          const BotonModoTema(),
           IconButton(
             icon: const Icon(Icons.translate),
             tooltip: 'idioma'.tr,
