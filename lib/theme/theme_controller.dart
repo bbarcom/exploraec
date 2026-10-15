@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// Modo de tema elegido dentro de la app (sistema / claro / oscuro).
-/// MaterialApp escucha este valor, así que cambiarlo redibuja toda la app
-/// sin tocar los ajustes del teléfono.
+/// El botón escucha este valor para mostrar su ícono; `Get.changeThemeMode`
+/// aplica el cambio a toda la app sin tocar los ajustes del teléfono.
 final ValueNotifier<ThemeMode> modoTema = ValueNotifier(ThemeMode.system);
 
 /// Pasa al siguiente modo: sistema → claro → oscuro → sistema.
@@ -12,6 +13,7 @@ void alternarModoTema() {
     ThemeMode.light => ThemeMode.dark,
     ThemeMode.dark => ThemeMode.system,
   };
+  Get.changeThemeMode(modoTema.value);
 }
 
 /// Botón para la AppBar que muestra el modo actual y lo alterna al tocarlo.
