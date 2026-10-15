@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:hive/hive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -18,7 +21,17 @@ Position posicionEn(double lat, double lng) => Position(
       speedAccuracy: 0,
     );
 
+
+Future<void> _abrirHiveDePrueba() async {
+  final dir = await Directory.systemTemp.createTemp('hive_test');
+  Hive.init(dir.path);
+  await Hive.openBox<Map>('favoritos');
+  await Hive.openBox('ajustes');
+}
+
 void main() {
+  setUpAll(_abrirHiveDePrueba);
+
   test('formatearDistancia usa m bajo 1 km y km desde 1 km', () {
     expect(formatearDistancia(0), '0 m');
     expect(formatearDistancia(850.4), '850 m');

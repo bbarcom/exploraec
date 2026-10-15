@@ -62,14 +62,34 @@ class GastosScreen extends GetView<GastosController> {
         // `cargarGastos` ya es `async`, así que se pasa tal cual: no hace falta
         // escribir nada nuevo. Mientras recarga, el `Obx` de arriba muestra el
         // `LoadingView` de siempre; eso es lo esperado.
-        return RefreshIndicator(
-          onRefresh: () async {
-            await controller.cargarGastos();
-            if (controller.estado.value == EstadoCarga.exito) {
-              Get.snackbar('Lista actualizada', 'Se consultaron tus gastos del viaje');
-            }
-          },
-          child: _buildLista(controller.gastos),
+        return Column(
+          children: [
+            if (controller.desdeCache.value)
+              MaterialBanner(
+                content: Text(
+                  'Sin conexión — mostrando tus gastos guardados '
+                  '(última sincronización: ${controller.ultimaSincronizacion})',
+                ),
+                leading: const Icon(Icons.cloud_off),
+                actions: [
+                  TextButton(
+                    onPressed: controller.cargarGastos,
+                    child: const Text('Reintentar'),
+                  ),
+                ],
+              ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await controller.cargarGastos();
+                  if (controller.estado.value == EstadoCarga.exito && !controller.desdeCache.value) {
+                    Get.snackbar('Lista actualizada', 'Se consultaron tus gastos del viaje');
+                  }
+                },
+                child: _buildLista(controller.gastos),
+              ),
+            ),
+          ],
         );
       }),
     );

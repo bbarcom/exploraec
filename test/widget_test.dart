@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -8,6 +11,8 @@ import 'package:exploraec/theme/theme_controller.dart';
 import 'package:exploraec/widgets/empty_view.dart';
 import 'package:exploraec/widgets/error_view.dart';
 import 'package:exploraec/widgets/loading_view.dart';
+import 'package:exploraec/screens/favorites_screen.dart';
+import 'package:exploraec/widgets/place_card.dart';
 
 /// Arranca la app y espera a que termine la carga simulada (1 s).
 Future<void> abrirApp(WidgetTester tester) async {
@@ -31,7 +36,17 @@ Future<void> simular(WidgetTester tester, String opcion) async {
   await tester.pump();
 }
 
+
+Future<void> _abrirHiveDePrueba() async {
+  final dir = await Directory.systemTemp.createTemp('hive_test');
+  Hive.init(dir.path);
+  await Hive.openBox<Map>('favoritos');
+  await Hive.openBox('ajustes');
+}
+
 void main() {
+  setUpAll(_abrirHiveDePrueba);
+
   late List<Place> lugaresOriginales;
 
   setUp(() => lugaresOriginales = List.of(lugaresEjemplo));
@@ -126,6 +141,7 @@ void main() {
   });
 
   testWidgets('Favoritos: el corazón se marca y la pestaña cuenta', (WidgetTester tester) async {
+    await tester.runAsync(() => Hive.box<Map>('favoritos').clear());
     await abrirApp(tester);
 
     await tester.tap(find.byIcon(Icons.favorite_border).first);
@@ -135,7 +151,10 @@ void main() {
 
     await tester.tap(find.text('Favoritos'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Favoritos marcados: 2'), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(FavoritesScreen), matching: find.byType(PlaceCard)),
+      findsNWidgets(2),
+    );
   });
 
   testWidgets('Las traducciones de la barra y el menú existen en inglés', (WidgetTester tester) async {
