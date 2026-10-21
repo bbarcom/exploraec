@@ -46,5 +46,8 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
-.claude/
-.claude/
+
+# Secretos y archivos locales (Sesión 10, Paso 4)
+.env
+.claude/settings.local.json
+CLAUDE.local.md
