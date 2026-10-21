@@ -29,6 +29,21 @@ class GastosController extends GetxController {
   /// `true` solo cuando la última carga exitosa vino de la caché local (el
   /// servidor no respondió): la UI lo usa para avisar «datos guardados».
   final RxBool desdeCache = false.obs;
+
+  /// Categoría elegida en los chips de filtro; `null` equivale a «Todas».
+  final RxnString categoriaFiltro = RxnString();
+
+  /// Categorías que aparecen en los gastos cargados, sin repetir.
+  List<String> get categoriasEnGastos => gastos.map((g) => g.categoria).toSet().toList();
+
+  /// Gastos que cumplen el filtro actual (todos si no hay categoría elegida).
+  List<Gasto> get gastosFiltrados {
+    final categoria = categoriaFiltro.value;
+    if (categoria == null) return gastos.toList();
+    return gastos.where((g) => g.categoria == categoria).toList();
+  }
+
+  void filtrarPorCategoria(String? categoria) => categoriaFiltro.value = categoria;
   String get ultimaSincronizacion => _repository.ultimaSincronizacion;
 
   @override

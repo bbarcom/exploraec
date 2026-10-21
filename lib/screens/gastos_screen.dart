@@ -103,6 +103,7 @@ class GastosScreen extends GetView<GastosController> {
                   ),
                 ],
               ),
+            _FiltroCategorias(controller: controller),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
@@ -111,7 +112,7 @@ class GastosScreen extends GetView<GastosController> {
                     Get.snackbar('Lista actualizada', 'Se consultaron tus gastos del viaje');
                   }
                 },
-                child: _buildLista(context, controller.gastos),
+                child: _buildLista(context, controller.gastosFiltrados),
               ),
             ),
           ],
@@ -167,5 +168,40 @@ class GastosScreen extends GetView<GastosController> {
     } on ApiException catch (e) {
       Get.snackbar('No se pudo eliminar', e.mensaje);
     }
+  }
+}
+
+/// Fila de chips justo encima de la lista: «Todas» y una opción por cada
+/// categoría que aparece en los gastos. Tocar una filtra la lista.
+class _FiltroCategorias extends StatelessWidget {
+  final GastosController controller;
+  const _FiltroCategorias({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final elegida = controller.categoriaFiltro.value;
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          children: [
+            ChoiceChip(
+              label: const Text('Todas'),
+              selected: elegida == null,
+              onSelected: (_) => controller.filtrarPorCategoria(null),
+            ),
+            for (final categoria in controller.categoriasEnGastos) ...[
+              const SizedBox(width: 8),
+              ChoiceChip(
+                label: Text(categoria),
+                selected: elegida == categoria,
+                onSelected: (_) => controller.filtrarPorCategoria(categoria),
+              ),
+            ],
+          ],
+        ),
+      );
+    });
   }
 }
